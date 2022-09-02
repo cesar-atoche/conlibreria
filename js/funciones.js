@@ -123,47 +123,53 @@ export function editarAlumno() {
     array[indice].genero = gen;
     array[indice].nacimiento = document.getElementById("edicion-nacimiento").value;
     array[indice].curso = document.getElementById("edicion-curso").value;
+    alertas("success",`El alumno ${array[indice].apellido.toUpperCase()} fue guardado con exito`,true)
     mostrar(array);
 }
 
 //agrega elementos al array
 export function agregarAlumno() {
-    let nombre = document.getElementById("nombre").value;
-    let apellido = document.getElementById("apellido").value;
-    let genero = document.getElementById("genero").value;
-    let nacimiento = document.getElementById("nacimiento").value;
-    let curso = document.getElementById("curso").value;
-    if (nombre == null || nombre.length == 0) {
-        alert('[ERROR] El campo nombre debe tener un valor...');
+    let formularioAgregar = document.querySelector("#formulario");
+    let arrAgregarAlumno = [];
+for (const iterator of formularioAgregar.children) {
+    let aux = iterator.children[1].children[0].id;
+    let valor = document.getElementById(aux).value;
+    if (valor == null || valor.length == 0){
+        alertas("error", `¡El campo ${aux.toUpperCase()} debe tener un valor!`, false);
         return false;
     }
-    else if (apellido == null || apellido.length == 0) {
-        alert('[ERROR] El campo apellido debe tener un valor...');
+    if (valor == "Genero" || valor == "genero") {
+        alertas("error", `¡El campo ${aux.toUpperCase()} debe ser M o F!`, false);
         return false;
     }
-    else if (genero == "Genero" || genero == "genero") {
-        alert('[ERROR] El campo genero debe contener M o F...');
-        return false;
-    }
-    else if (nacimiento == null || nacimiento.length == 0) {
-        alert('[ERROR] El campo nacimiento debe tener un valor...');
-        return false;
-    }
-    else if (curso == null || curso.length == 0) {
-        alert('[ERROR] El campo curso debe tener un valor...');
-        return false;
-    }
-    const agregado = new generadorCodigo(ind++, nombre, apellido, genero, nacimiento, curso);
+    arrAgregarAlumno.push(valor);
+}
+    const agregado = new generadorCodigo(ind++, ...arrAgregarAlumno);
+    alertas("success",`El alumno ${arrAgregarAlumno[1].toUpperCase()} fue guardado con exito`,true)
     agregaArray(agregado)
     tablita.innerHTML = "";
     mostrar(array)
     limpiarFormulario("formulario")
 }
 
+function alertas(icono, mensaje,toast){
+    Swal.fire({
+        toast: toast,
+        icon: icono,
+        // position: "top-end",
+        showConfirmButton: false,
+        text: mensaje,
+        timer:1500,
+        background: "white",
+        color: "color"
+    })
+}
+
 //elimina elementos
 function eliminar(indice) {
     array.splice(indice, 1);
     mostrar(array)
+    alertas("warning",`El alumno fue eliminado`,true)
 }
 
 //funcion limpiar formulario
@@ -188,6 +194,7 @@ export function filtrarAlumnos() {
             if (x.nombre < y.nombre) { return -1 }
             if (x.nombre > y.nombre) { return 1 }
             return 0
+        
         });
         mostrar(arraynuevo);
     }
@@ -244,7 +251,7 @@ export function mostrarNotas(array) {
             <td><input type="text" size="1" id ="nota1${key}" value="${iterator.notas[0] || 0}" disabled></td>
             <td><input type="text" size="1" id ="nota2${key}" value="${iterator.notas[1] || 0}" disabled></td>
             <td><input type="text" size="1" id ="nota3${key}" value="${iterator.notas[2] || 0}" disabled></td>
-            <td><input type="text" size="1" id ="promedio" value="${iterator.promedio() || 0}" disabled></td>
+            <td><input type="text" size="1" id ="promedio" value="${iterator.promedio()}" disabled></td>
             <td id="tdEditar"></td>
             <td></td>`
             tbody.appendChild(row);
@@ -262,15 +269,16 @@ export function mostrarNotas(array) {
 
 //guarda en el array
 function guardarNota(indice) {
-    array[indice].notas[0] = document.getElementById(`nota1${indice}`).value;
-    array[indice].notas[1] = document.getElementById(`nota2${indice}`).value;
-    array[indice].notas[2] = document.getElementById(`nota3${indice}`).value;
+    for (let i=0;i<3;i++) { 
+    array[indice].notas[i] = document.getElementById(`nota${i+1}${indice}`).value;
+    }
     mostrarNotas(array);
+    alertas("success",`Las notas fueron guardadas con exito`,true)
 }
 
 //edita los input y los habilita 
 function editarNota(indice) {
-    document.getElementById(`nota1${indice}`).removeAttribute("disabled")
-    document.getElementById(`nota2${indice}`).removeAttribute("disabled")
-    document.getElementById(`nota3${indice}`).removeAttribute("disabled")
+    for (let i=0;i<3;i++) { 
+        document.getElementById(`nota${i+1}${indice}`).removeAttribute("disabled")
+    }
 }

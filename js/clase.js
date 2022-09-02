@@ -34,20 +34,12 @@ export class generadorCodigo {
         return codigo.toUpperCase();
     }
     validaGenero() {
-        let string = "";
-        if (this.genero == "M" || this.genero == "m") {
-            string = "Masculino";
-        }
-        else {
-            string = "Femenino"
-        }
+        const string = (this.genero == "M" || this.genero == "m") ? "Masculino": "Femenino";
         return string;
     }
     promedio() {
             let promedio = ((parseInt(this.notas[0]) + parseInt(this.notas[1]) + parseInt(this.notas[2])) / 3).toFixed(2);
-            if (promedio === "NaN"){
-                promedio = 0;
-            }
+            if (promedio === "NaN") promedio = 0;
             return promedio;
     }
 }
