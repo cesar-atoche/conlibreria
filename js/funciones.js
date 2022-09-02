@@ -114,7 +114,7 @@ function agregaEdicion(indice) {
 export function editarAlumno() {
     let gen = document.getElementById("edicion-genero").value;
     if (gen.toUpperCase() !== "M" && gen.toUpperCase() !== "F") {
-        alert('[ERROR] El campo genero debe contener M o F...');
+        alertas("error", `¡El campo genero debe ser M o F!`, false);
         return false;
     }
     let indice = document.getElementById("indice").value;
